@@ -9,10 +9,17 @@ var config = require("../config/db.js")
 if (process.env.DATABASE_URL) {
   var sequelize = new Sequelize("dburl");
 } else {
-  var sequelize = new Sequelize("db", "db", "db", {
-    host: "db",
-    dialect: "postgres"
-  });
+  var sequelize = new Sequelize(
+    process.env.DB_NAME,
+    process.env.DB_USER,
+    process.env.DB_PASSWORD,
+    {
+      host: process.env.DB_HOST || "localhost",
+      port: process.env.DB_PORT || 5432, // Explicitly set the port
+      dialect: "postgres",
+    }
+  );
+  
 }
 
 sequelize
@@ -40,7 +47,7 @@ fs
     return (file.indexOf(".") !== 0) && (file !== "index.js");
   })
   .forEach(function (file) {
-    var model = sequelize.import(path.join(__dirname, file));
+    const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
     db[model.name] = model;
   });
 

@@ -1,7 +1,6 @@
 var db = require('../models')
 var LocalStrategy = require('passport-local').Strategy
-var bCrypt = require('bcrypt')
-
+const bcrypt = require('bcrypt');
 
 module.exports = function (passport) {
 
